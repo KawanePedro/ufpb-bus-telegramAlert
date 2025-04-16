@@ -15,39 +15,41 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 # Comando /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        f"Olá, {update.effective_user.first_name}! Sou um bot bem burrinho.\n\n"
+        f"Olá, {update.effective_user.first_name}! Sou o Buzinho, e eu te aviso quando o ônibus estiver chegando!🚌\n\n"
         "Comandos disponíveis:\n"
-        "/help - Mostrar ajuda\n"
+        "/ajuda - Mostra ajuda\n"
         "/info - Informações sobre o bot\n"
-        "/echo [mensagem] - Repete sua mensagem\n"
-        "/chatid - Mostra o ID deste chat"
+        "/horarios - Exibe horários do ônibus\n"
     )
 
 # Comando /help
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def ajuda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Aqui estão os comandos disponíveis:\n"
-        "/start - Iniciar o bot\n"
-        "/help - Mostrar esta mensagem de ajuda\n"
+        "/ajuda - Mostrar esta mensagem de ajuda\n"
         "/info - Informações sobre o bot\n"
-        "/echo [mensagem] - Repete sua mensagem\n"
-        "/chatid - Mostra o ID deste chat"
+        "/horarios - Exibe horários do ônibus\n"
     )
 
 # Comando /info
 async def info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "Avisarei quando o ônibus circular da UFPB estiver próximo do Centro de Informática."
+        "Oi! Sou um Bot criado por alunos de engenharia da computação, e estou aqui para ajudar a comunidade do Centro de Informática. Comigo aqui, ninguém mais vai perder o ônibus circular!!!🚌🚌🚌"
+    )
+# Comando /horarios
+async def horarios(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "Aqui estão os horários previstos do ônibus circular:" \
+        "07h20 - Saída do CCHLA (sede) para o CI/CTDR\n"
+        "08h00 - Saída do CI/CTDR para o CCHLA (sede)\n"
+        "12h20 - Saída do CCHLA (sede) para o CI/CTDR\n"
+        "13h00 - Saída do CI/CTDR para o CCHLA (sede)\n"
+        "18h20 - Saída do CCHLA (sede) para o CI/CTDR\n"
+        "19h00 - Saída do CI/CTDR para o CCHLA (sede)\n"
+        "21h30 - Saída do CCHLA (sede) para o CI/CTDR\n"
+        "22h00 - Saída do CI/CTDR para o CCHLA (sede)\n"  
     )
 
-# Comando /echo
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Verifica se o usuário passou algum argumento após o comando
-    if context.args:
-        message = ' '.join(context.args)
-        await update.message.reply_text(f"{message}")
-    else:
-        await update.message.reply_text("Por favor, escreva alguma mensagem após o comando /echo")
 
 # Novo comando /chatid
 async def chatid(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -80,9 +82,9 @@ def main():
     
     # Adicionar handlers de comandos
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("help", ajuda))
     application.add_handler(CommandHandler("info", info))
-    application.add_handler(CommandHandler("echo", echo))
+    application.add_handler(CommandHandler("echo", horarios))
     application.add_handler(CommandHandler("chatid", chatid))
     
     # Handler para mensagens de texto normais
