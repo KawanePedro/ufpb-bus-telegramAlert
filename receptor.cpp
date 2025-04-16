@@ -5,8 +5,8 @@
 #include <WiFiClientSecure.h>
 
 // Configuração dos pinos para NodeMCU
-#define CE_PIN    D2  // GPIO4
-#define CSN_PIN   D8  // GPIO15
+#define CE_PIN   4  // GPIO4
+#define CSN_PIN   15  // GPIO15
 
 RF24 radio(CE_PIN, CSN_PIN);
 const byte address[6] = "00001";
