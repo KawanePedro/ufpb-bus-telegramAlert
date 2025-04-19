@@ -15,7 +15,7 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 # Comando /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        f"Olá, {update.effective_user.first_name}! Sou o Buzinho, e eu te aviso quando o ônibus estiver chegando!🚌\n\n"
+        f"Olá, {update.effective_user.first_name}! Sou o Buszer, e eu te aviso quando o ônibus estiver chegando!🚌\n\n"
         "Comandos disponíveis:\n"
         "/ajuda - Mostra ajuda\n"
         "/info - Informações sobre o bot\n"
