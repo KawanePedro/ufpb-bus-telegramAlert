@@ -5,8 +5,10 @@
 #include <WiFiClientSecure.h>
 
 // Configuração dos pinos para NodeMCU
-#define CE_PIN   4  // GPIO4
-#define CSN_PIN   15  // GPIO15
+#define CE_PIN   4    // GPIO4
+#define CSN_PIN  15   // GPIO15
+#define LED_PIN  2    // GPIO2 (D4 no NodeMCU) - LED embutido
+#define BUZZER_PIN 5  // GPIO5 (D1 no NodeMCU) - Buzzer
 
 RF24 radio(CE_PIN, CSN_PIN);
 const byte address[6] = "00001";
@@ -21,10 +23,23 @@ const String chat_id = ""; // id do bot
 
 // Variáveis para controle
 unsigned long lastNotification = 0;
-const long notificationInterval = 300000; 
+const long notificationInterval = 300000; // 5 minutos
+
+// Variáveis para controle do buzzer
+unsigned long lastBuzzerTime = 0;
+const long buzzerInterval = 30000;   // Tempo mínimo entre toques (30 segundos)
+const long buzzerDuration = 500;    // Duração do toque (meio segundo)
 
 void setup() {
- Serial.begin(115200);
+  Serial.begin(115200);
+  
+  // Configura os pinos de saída
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  
+  // Inicializa com o LED e buzzer desligados
+  digitalWrite(LED_PIN, HIGH);  // LED embutido é ativo em LOW
+  digitalWrite(BUZZER_PIN, LOW);
   
   // Inicializa WiFi
   WiFi.begin(ssid, password);
@@ -49,7 +64,10 @@ void setup() {
 }
 
 void loop() {
-   if (radio.available()) {
+  unsigned long currentMillis = millis();
+  
+  // Verifica se há mensagem disponível
+  if (radio.available()) {
     char receivedMessage[32] = "";
     radio.read(&receivedMessage, sizeof(receivedMessage));
     
@@ -57,11 +75,26 @@ void loop() {
     Serial.println(receivedMessage);
     
     // Verifica se é a mensagem do ônibus
-    if (String(receivedMessage) == "CIRCULARCI") {
+    if (String(receivedMessage) == "CIRCULAR_CI") {
+      // Pisca o LED quando recebe a mensagem específica
+      blinkLED();
+      
       // Verifica se já passou tempo suficiente desde a última notificação
-      if (millis() - lastNotification > notificationInterval) {
+      if (currentMillis - lastNotification > notificationInterval) {
         sendTelegramNotification("🚌 Ônibus Circular está se aproximando do CI!");
-        lastNotification = millis();
+        lastNotification = currentMillis;
+      }
+      
+      // Ativa o buzzer se já passou tempo suficiente desde o último toque
+      if (currentMillis - lastBuzzerTime > buzzerInterval) {
+        digitalWrite(BUZZER_PIN, HIGH);
+        Serial.println("Buzzer ligado");
+        lastBuzzerTime = currentMillis;
+        
+        // Programa o desligamento do buzzer
+        delay(buzzerDuration);
+        digitalWrite(BUZZER_PIN, LOW);
+        Serial.println("Buzzer desligado");
       }
     }
   }
@@ -92,5 +125,14 @@ void sendTelegramNotification(String message) {
     String line = client.readStringUntil('\r');
     Serial.print(line);
   }
+}
 
+// Função para piscar o LED quando recebe mensagem específica
+void blinkLED() {
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(LED_PIN, LOW);  // Liga o LED (ativo em LOW)
+    delay(500);
+    digitalWrite(LED_PIN, HIGH); // Desliga o LED
+    delay(500);
+  }
 }
