@@ -84,7 +84,7 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", ajuda))
     application.add_handler(CommandHandler("info", info))
-    application.add_handler(CommandHandler("echo", horarios))
+    application.add_handler(CommandHandler("horarios", horarios))
     application.add_handler(CommandHandler("chatid", chatid))
     
     # Handler para mensagens de texto normais
