@@ -27,12 +27,13 @@ void setup() {
 }
 
 void loop() {
-  const char message[] = "CIRCULARCI";
+  const char message[] = "CIRCULAR_CI";
   
   bool success = radio.write(&message, sizeof(message));
   
   if (success) {
     Serial.println("Sinal enviado com sucesso!");
+    delay(5000)
   } else {
     Serial.println("Falha ao enviar o sinal!");
   }
