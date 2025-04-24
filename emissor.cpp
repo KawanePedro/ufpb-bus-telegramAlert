@@ -33,7 +33,7 @@ void loop() {
   
   if (success) {
     Serial.println("Sinal enviado com sucesso!");
-    delay(5000)
+    delay(5000);
   } else {
     Serial.println("Falha ao enviar o sinal!");
   }
